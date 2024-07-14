@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         NETLIFY_SITE_ID = 'e0cefa3e-196d-44a9-8d41-e84b996d7a1d'
+
     }
 
 
@@ -25,8 +26,8 @@ pipeline {
             }            
         }
 
-        stage(Test) {
-            agent
+        stage('Test') {
+            agent {
                 docker {
                     image 'node:18-alpine'
                 }
@@ -39,7 +40,7 @@ pipeline {
                 '''
             }
         }
-            stage('E2E') {
+        stage('E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -70,8 +71,10 @@ pipeline {
                '''
             }   
         }    
-    } 
-}
+      }
+    }
+  }      
+  
     
 
         
