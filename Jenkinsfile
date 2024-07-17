@@ -60,7 +60,7 @@ pipeline {
 
                     steps {
                         sh '''
-                            npm install serve
+                            sudo npm install serve
                             node_modules/.bin/serve -s build &
                             sleep 10
                             npx playwright test  --reporter=html
@@ -85,7 +85,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install netlify-cli
+                    sudo npm install netlify-cli
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
@@ -114,7 +114,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    npm install netlify-cli
+                    sudo npm install netlify-cli
                     node_modules/.bin/netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
