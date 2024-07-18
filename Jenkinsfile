@@ -57,15 +57,14 @@ pipeline {
                 stage('E2E') {
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'my-playwright'
                             reuseNode true
                         }
                     }
 
                     steps {
                         sh '''
-                            sudo npm install serve
-                            node_modules/.bin/serve -s build &
+                            serve -s build &
                             sleep 10
                             npx playwright test  --reporter=html
                         '''
@@ -83,17 +82,16 @@ pipeline {
         stage('Deploy Staging') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'my-playwright'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
-                    sudo npm install netlify-cli node-jq
-                    node_modules/.bin/netlify --version
+                    netlify --version
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --staging > deploy-output.json
+                    netlify status
+                    netlify deploy --dir=build --staging > deploy-output.json
                 '''
             }
         }
@@ -106,17 +104,16 @@ pipeline {
         stage('Deploy Prod') {
             agent {
                 docker {
-                    image 'node:18-alpine'
+                    image 'my-playwright'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
-                    sudo npm install netlify-cli
-                    node_modules/.bin/netlify --version
+                    netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
+                    netlify status
+                    netlify deploy --dir=build --prod
                 '''
             }
         }
@@ -130,7 +127,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = 'PUT YOUR NETLIFY SITE URL HERE'
+                CI_ENVIRONMENT_URL = 'jazzy-kelpie-dd2247.netlify.app'
             }
 
             steps {
