@@ -7,6 +7,10 @@ pipeline {
     }
 
     stages {
+        stage('Docker')
+            steps {
+                sh 'docker build -t my-playwright .'
+            }
 
         stage('Build') {
             agent {
@@ -85,22 +89,16 @@ pipeline {
             }
             steps {
                 sh '''
-                    sudo npm install netlify-cli
+                    sudo npm install netlify-cli node-jq
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --staging
+                    node_modules/.bin/netlify deploy --dir=build --staging > deploy-output.json
                 '''
             }
         }
         
         stage('Approval') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }    
             steps {
                 input message: 'Do you wish to deploy to production? ', ok: 'Yes, I am sure!'
             }    
