@@ -13,16 +13,19 @@ pipeline {
             agent {
                 docker {
                     image 'amazon/aws-cli'
-                    args "--entrypoint="
+                    args "--entrypoint=''"
                 }
             }
-
+            
+            environment  {
+                AWS_S3_BUCKET = 'jenkins-20072024'
+            }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY' )])     
                     sh '''
                     aws --version
                     echo "Hello S3!" > index.html
-                    aws s3 cp index.html > s3://jenkins-20072024/index.html
+                    aws s3 cp index.html > s3://$AWS_S3_BUCKET/index.html
                     '''
             }
         } 
