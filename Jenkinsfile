@@ -7,11 +7,22 @@ pipeline {
     }
 
     stages {
-        stage('Docker') {
-            steps {
-                sh 'docker build -t my-playwright .'
+        
+        stage {
+            agent {
+                docker {
+                    image 'amazon/aws-cli'
+                }
             }
-        }
+
+            steps {
+                sh '''
+                aws --version
+                
+                '''
+            }
+        } 
+
         stage('Build') {
             agent {
                 docker {
