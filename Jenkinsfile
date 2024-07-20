@@ -4,6 +4,7 @@ pipeline {
     environment {
         NETLIFY_SITE_ID = 'e0cefa3e-196d-44a9-8d41-e84b996d7a1d'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        
     }
 
     stages {
@@ -12,13 +13,16 @@ pipeline {
             agent {
                 docker {
                     image 'amazon/aws-cli'
+                    args "--entrypoint="
                 }
             }
 
             steps {
+                withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY' )])     
                 sh '''
                 aws --version
-
+                echo "Hello S3!" > index.html
+                aws s3 cp index.html > s3://jenkins-20072024
                 '''
             }
         } 
