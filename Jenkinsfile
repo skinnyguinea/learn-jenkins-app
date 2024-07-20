@@ -19,11 +19,11 @@ pipeline {
 
             steps {
                 withCredentials([usernamePassword(credentialsId: 'my-aws', passwordVariable: 'AWS_SECRET_ACCESS_KEY' )])     
-                sh '''
-                aws --version
-                echo "Hello S3!" > index.html
-                aws s3 cp index.html > s3://jenkins-20072024
-                '''
+                    sh '''
+                    aws --version
+                    echo "Hello S3!" > index.html
+                    aws s3 cp index.html > s3://jenkins-20072024/index.html
+                    '''
             }
         } 
 
